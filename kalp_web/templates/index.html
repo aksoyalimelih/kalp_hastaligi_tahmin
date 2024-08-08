@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalp Hastalığı Tahmin Sistemi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f7;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            display: inline-block;
+            text-align: left;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            margin-bottom: 10px;
+            padding: 10px;
+            width: calc(100% - 22px);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .info {
+            font-size: 14px;
+            color: #666;
+        }
+        .description {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        #result {
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kalp Hastalığı Tahmin Sistemi</h1>
+    <form action="/predict" method="POST">
+        <label for="yas">Yaş:</label>
+        <input type="number" id="yas" name="yas" min="1" max="140" required>
+        <span class="info">(1 - 140)</span>
+        <p class="description">Hastanın yaşı. Kalp hastalığı riskini etkileyen önemli bir faktördür.</p>
+
+        <label for="cinsiyet">Cinsiyet (1=Erkek, 0=Kadın):</label>
+        <input type="number" id="cinsiyet" name="cinsiyet" min="0" max="1" required>
+        <span class="info">(0 veya 1)</span>
+        <p class="description">Hastanın cinsiyeti. Erkeklerde kalp hastalığı riski genellikle daha yüksektir.</p>
+
+        <label for="gogus_agrisi_tipi">Göğüs Ağrısı Tipi:</label>
+        <input type="number" id="gogus_agrisi_tipi" name="gogus_agrisi_tipi" min="0" max="4" required>
+        <span class="info">(0 - 4)</span>
+        <p class="description">Göğüs ağrısının tipi. Bu, kalp hastalığı belirtilerinden biri olabilir.</p>
+
+        <label for="dinlenme_kan_basinci">Dinlenme Kan Basıncı:</label>
+        <input type="number" id="dinlenme_kan_basinci" name="dinlenme_kan_basinci" min="94" max="200" required>
+        <span class="info">(94 - 200)</span>
+        <p class="description">Dinlenme sırasında ölçülen kan basıncı. Yüksek kan basıncı kalp hastalığı riskini artırabilir.</p>
+
+        <label for="kolestrol">Kolesterol:</label>
+        <input type="number" id="kolestrol" name="kolestrol" min="126" max="564" required>
+        <span class="info">(126 - 564)</span>
+        <p class="description">Kanınızdaki toplam kolesterol seviyesi. Yüksek kolesterol kalp hastalığı riskini artırabilir.</p>
+
+        <label for="aclik_kan_sekeri">Açlık Kan Şekeri:</label>
+        <input type="number" id="aclik_kan_sekeri" name="aclik_kan_sekeri" min="0" max="1" required>
+        <span class="info">(0 - 1)</span>
+        <p class="description">Açlık durumunda ölçülen kan şekeri seviyesi. Yüksek seviyeler kalp hastalığı riskini artırabilir.</p>
+
+        <label for="istirahat_EKG_sonuclari">İstirahat EKG Sonuçları:</label>
+        <input type="number" id="istirahat_EKG_sonuclari" name="istirahat_EKG_sonuclari" min="0" max="2" required>
+        <span class="info">(0 - 2)</span>
+        <p class="description">İstirahat sırasında EKG sonuçları. Anormal sonuçlar kalp hastalığını işaret edebilir.</p>
+
+        <label for="maksimum_kalp_hizi">Maksimum Kalp Hızı:</label>
+        <input type="number" id="maksimum_kalp_hizi" name="maksimum_kalp_hizi" min="71" max="202" required>
+        <span class="info">(71 - 202)</span>
+        <p class="description">Egzersiz sırasında ulaşılan maksimum kalp hızı. Yüksek değerler kalp hastalığı ile ilişkilendirilebilir.</p>
+
+        <label for="egzersiz_induklu_anjina">Egzersiz İndüklenmiş Anjina:</label>
+        <input type="number" id="egzersiz_induklu_anjina" name="egzersiz_induklu_anjina" min="0" max="1" required>
+        <span class="info">(0 - 1)</span>
+        <p class="description">Egzersiz sırasında meydana gelen göğüs ağrısı (anjina). Kalp hastalığı belirtisi olabilir.</p>
+
+        <label for="st_depresyonu">ST Depresyonu:</label>
+        <input type="number" id="st_depresyonu" name="st_depresyonu" min="0.0" max="6.2" step="0.1" required>
+        <span class="info">(0.0 - 6.2)</span>
+        <p class="description">Kalp kasının oksijen talebi ile sağlanan oksijen miktarı arasındaki farkı gösteren bir ölçüm.</p>
+
+        <label for="egzersiz_ST_egrisi">Egzersiz ST Eğrisi:</label>
+        <input type="number" id="egzersiz_ST_egrisi" name="egzersiz_ST_egrisi" min="0" max="2" required>
+        <span class="info">(0 - 2)</span>
+        <p class="description">Egzersiz sırasında ST segmentinin eğimi. Kalp hastalığı ile ilişkilendirilebilir.</p>
+
+        <label for="ana_damarlar">Ana Damarlar:</label>
+        <input type="number" id="ana_damarlar" name="ana_damarlar" min="0" max="3" required>
+        <span class="info">(0 - 3)</span>
+        <p class="description">Renkli floroskopi ile tespit edilen kalbin büyük damarlarındaki tıkanıklık sayısı.</p>
+
+        <label for="talasemi">Talasemi:</label>
+        <input type="number" id="talasemi" name="talasemi" min="0" max="3" required>
+        <span class="info">(0 - 3)</span>
+        <p class="description">Talasemi türü. Kalp hastalığı riskini etkileyebilir.</p>
+
+        <button type="submit">Tahmin Et</button>
+        <span id="result">
+            {% if result %}
+                {{ result }}
+            {% endif %}
+        </span>
+    </form>
+</body>
+</html>
